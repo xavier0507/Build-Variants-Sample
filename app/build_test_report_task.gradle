@@ -1,0 +1,31 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "0.7.7.201606060606"
+}
+
+def coverageSourceDirs = ['../app/src/main/java']
+
+// For Unit Test Report
+task jacocoTestReport(type:JacocoReport, dependsOn: "testBetaEnvDebugUnitTest") {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports"
+
+    classDirectories = fileTree(
+            dir: '../app/build/intermediates/classes/BetaEnv/debug/com/xy/bvs',
+            excludes: ['**/R.class',
+                       '**/R$*.class',
+                       '**/*$ViewInjector*.*',
+                       '**/BuildConfig.*',
+                       '**/Manifest*.*']
+    )
+
+    additionalSourceDirs = files(coverageSourceDirs)
+    sourceDirectories = files(coverageSourceDirs)
+    executionData = files('../app/build/jacoco/testBetaEnvDebugUnitTest.exec')
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
